@@ -1,0 +1,581 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+#mainlogo {
+  height: 120px;
+  display: inline-block;
+  position: absolute;
+  top: 9px;
+  left: 20px;
+  border-radius: 200px;
+
+  /* transform: rotate(45deg); */
+}
+
+
+
+/* Fade-in animation for feedback response */
+@keyframes fadeInFeedback {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+.chat-style-input-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+  padding: 15px;
+  background-color: var(--background-light, #f9f9f9);
+  border-radius: 16px;
+}
+
+.chat-style-input-column input,
+.chat-style-input-column button {
+  padding: 10px 15px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.chat-style-input-column button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.chat-style-input-column button:hover {
+  background-color: #0056b3;
+}
+
+
+
+
+
+#feedbackResponse {
+  margin-top: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  opacity: 0;
+  animation: none;
+  transition: all 0.3s ease;
+}
+
+#feedbackResponse.show {
+  animation: fadeInFeedback 0.5s ease forwards;
+}
+
+/* Emoji sparkle burst */
+.sparkle {
+  position: absolute;
+  font-size: 1.3rem;
+  pointer-events: none;
+  animation: sparkleAnim 700ms ease-out forwards;
+  opacity: 0.9;
+  z-index: 9999;
+  
+}
+
+@keyframes sparkleAnim {
+  0% {
+    transform: scale(0.5) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.2) rotate(36deg);
+ 
+    opacity: 0;
+  }
+}
+
+
+
+
+
+
+
+
+#results ul {
+  text-align: left;
+  padding-left: 20px;
+}
+
+#results li {
+  margin-bottom: 8px;
+  list-style-type: "💬 ";
+}
+
+.container {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  font-size: 1rem;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  resize: none;
+  position: relative;
+  left: -14px;
+}
+
+textarea:focus {
+  outline: none;
+  border: 2px solid transparent;
+  background-image: linear-gradient(white, white), linear-gradient(135deg, #ff2300, #00ff00);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+
+}
+
+button {
+  padding: 12px 30px;
+  font-size: 1rem;
+  margin: 15px 0;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background-color: #667eea;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #764ba2;
+}
+.btn {
+  position: relative;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #3b3b3b;
+  background: none;
+  border: 2px solid #646cff;
+  border-radius: 8px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.liquid {
+  background: linear-gradient(#646cff 0 0) no-repeat calc(200% - var(--p, 0%))
+    100% / 200% var(--p, 0.2em);
+  transition: 0.3s var(--t, 0s),
+    background-position 0.3s calc(0.3s - var(--t, 0s));
+}
+
+.liquid:hover {
+  --p: 100%;
+  --t: 0.3s;
+  color: #fff;
+}
+
+/* Results Styling */
+.results {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideUp 0.5s ease forwards;
+}
+
+.safe {
+  background: #d4edda;
+  color: #155724;
+}
+
+.scam {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.unknown {
+  background: #fff3cd;
+  color: #856404;
+}
+
+/* Action buttons */
+#actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+#actions button {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  background: #f0f0f0;
+  color: #222;
+}
+#actions button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+body.dark #actions button {
+  background: #333;
+  color: #eee;
+}
+
+
+
+
+#feedback {
+  margin-top: 25px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: background 0.3s ease;
+}
+
+#feedback p {
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 1rem;
+  color: #333;
+}
+
+#feedbackButtons button {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 10px 14px;
+  margin: 0 8px;
+  font-size: 1.3rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+#feedbackButtons button:hover {
+  transform: scale(1.1);
+  background-color: #e0e0e0;
+}
+
+#feedbackResponse {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* 🌙 Dark Mode Styling */
+body.dark #feedback {
+  background: rgba(40, 40, 40, 0.9);
+}
+
+body.dark #feedback p {
+  color: #eee;
+}
+
+body.dark #feedbackButtons button {
+  background-color: #2c2c2c;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+body.dark #feedbackButtons button:hover {
+  background-color: #3a3a3a;
+}
+
+
+/* Skeleton Loader Block */
+.skeleton {
+  background-color: #eee;
+  border-radius: 8px;
+  margin-top: 20px;
+  padding: 15px;
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+.skeleton h3,
+.skeleton p {
+  background-color: #ddd;
+  border-radius: 4px;
+  margin: 10px auto;
+}
+
+.skeleton h3 {
+  width: 50%;
+  height: 20px;
+}
+
+.skeleton p {
+  width: 100%;
+  height: 14px;
+}
+
+/* Animations */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Loading Spinner */
+.loading {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #667eea;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin: 30px auto;
+  animation: spin 1s linear infinite;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Full-Page Skeleton Overlay */
+.full-skeleton {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #f3f3f3;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.full-skeleton::before {
+  content: "";
+  border: 6px solid #ccc;
+  border-top: 6px solid #667eea;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+.full-skeleton::after {
+  content: "Checking for scam...";
+  font-size: 1.2rem;
+  color: #444;
+}
+
+
+.icon-alert svg {
+  width: 40px;
+  height: 40px;
+  margin-right: 15px;
+}
+
+
+
+/* My Dark Mode Support...this comments are essecial for 
+you dear developer incase you
+ want to read my code especially
+if you are a beginner lol */
+body.dark {
+  background: #121212;
+  color: red;
+}
+
+body.dark .container {
+  background: #1e1e1e;
+  box-shadow: 0px 10px 20px rgba(255, 255, 255, 0.05);
+}
+
+body.dark textarea {
+  outline: none;
+  border: 2px solid transparent;
+  background-image: linear-gradient(#2c2c2c, rgb(70, 68, 68)), linear-gradient(135deg, #ff2300, #00ff00);
+  background-origin: border-box;
+  color: #eee;
+  background-clip: padding-box, border-box;
+
+}
+
+body.dark button {
+  background-color: #2c2c2c;
+  color: #eee;
+  border: 1px solid #444;
+}
+
+
+body::after {
+  background: url("./assets/amlogo.jpg");
+  height: 300px;
+}
+
+body.dark .safe {
+  background: #264d38;
+  color: #c8f7c5;
+}
+
+body.dark .scam {
+  background: #552525;
+  color: #f7c5c5;
+}
+
+body.dark .unknown {
+  background: #5a5430;
+  color: #fff6c5;
+}
+
+body.dark .full-skeleton {
+  background: #1e1e1e;
+}
+
+body.dark .full-skeleton::after {
+  color: #eee;
+}
+
+
+
+/*here I customized the Dark Mode for SweetAlert2 */
+body.dark .swal2-popup {
+  background-color: #2c2c2c !important;
+  color: #eee !important;
+}
+
+body.dark .swal2-title,
+body.dark .swal2-html-container {
+  color: #eee !important;
+}
+
+body.dark .swal2-confirm {
+  background-color: #667eea !important;
+  color: #fff !important;
+}
+
+
+
+#themeToggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  transition: transform 0.3s ease;
+
+}
+
+.hidden {
+  display: none;
+}
+
+
+#mainlogo {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#mainlogo:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+@media screen and (max-width: 600px) {
+  #mainlogo {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 80px;
+    z-index: 1000;
+  }
+
+  .container {
+    margin-top: 130px; /* push container down so logo doesn't overlap */
+    padding: 20px;
+    width: 90%;
+  }
+
+  #actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  #actions button {
+    flex: 1 1 45%;
+  }
+}
+
+
+
+
+@media screen and (min-width: 601px) and (max-width: 900px) {
+  .container {
+    width: 80%;
+    padding: 30px;
+  }
+
+  #mainlogo {
+    height: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 15px;
+  }
+}
