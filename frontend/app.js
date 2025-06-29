@@ -158,6 +158,7 @@ const feedbackBox = document.getElementById("feedbackBox");
 const submitFeedback = document.getElementById("submitFeedback");
 const feedbackText = document.getElementById("feedbackText");
 
+let selectedReaction = "";
 function showFeedback(text, color) {
   feedbackResponse.textContent = text;
   feedbackResponse.style.color = color;
@@ -202,57 +203,66 @@ function burstEmoji(button, emoji = "👎") {
 }
 
 thumbsUp.addEventListener("click", () => {
+  selectedReaction = "Like 👍";
   showFeedback("🎉 Thanks for your feedback!", "#28a745");
   sparkleBurst(thumbsUp, "👍");
   feedbackBox.classList.remove("hidden");
 });
 
 thumbsDown.addEventListener("click", () => {
+  selectedReaction = "Dislike 👎";
   showFeedback("🙏 Sorry about that. We'll try to improve.", "#dc3545");
   sparkleBurst(thumbsDown, "👎");
   feedbackBox.classList.remove("hidden");
 });
 
 submitFeedback.addEventListener("click", () => {
-  const name = document.getElementById("feedbackName").value.trim();
-  const email = document.getElementById("feedbackEmail").value.trim();
-  const feedback = document.getElementById("feedbackText").value.trim();
+  const name =
+    document.getElementById("feedbackName").value.trim() || "Anonymous";
+  const email =
+    document.getElementById("feedbackEmail").value.trim() ||
+    "noreply@example.com";
+  const message = feedbackText.value.trim();
 
-  if (!name || !email || !feedback) {
+  if (!message && !selectedReaction) {
     Swal.fire({
       icon: "info",
       title: "Missing Info",
-      text: "Please fill in all the fields before submitting.",
+      text: "Please fill in all the fields select 👍/👎 before submitting.",
     });
     return;
   }
 
-  emailjs.init("service_56109gg", "template_a16aqem", {
-    name: name,
-    email: email,
-    feedback: feedback,
-  })
-  .then(() => {
-    Swal.fire({
-      icon: "success",
-      title: "Thank you!",
-      text: "Your feedback has been sent successfully.",
-    });
-    document.getElementById("feedbackName").value = "";
-    document.getElementById("feedbackEmail").value = "";
-    document.getElementById("feedbackText").value = "";
-    feedbackBox.classList.add("hidden");
-  })
-  .catch((error) => {
-    Swal.fire({
-      icon: "error",
-      title: "Sending failed",
-      text: "Could not send your feedback. Try again later.",
-    });
-    console.error("EmailJS Error:", error);
-  });
-});
+  emailjs.send("service_56109gg", "template_a16aqem", {
+      name: name,
+      email: email,
+      message: message || "(no written message)",
+      reaction: selectedReaction || "(no reaction)",
+    })
+    .then(() => {
+      Swal.fire({
+        icon: "success",
+        title: "Thank you!",
+        text: "Your feedback has been sent successfully.",
+      });
 
+
+     // Reset form
+    feedbackText.value = "";
+    if (document.getElementById("feedbackName")) document.getElementById("feedbackName").value = "";
+    if (document.getElementById("feedbackEmail")) document.getElementById("feedbackEmail").value = "";
+    selectedReaction = "";
+    feedbackBox.classList.add("hidden");
+    })
+    .catch((error) => {
+      Swal.fire({
+        icon: "error",
+        title: "Sending failed",
+        text: "Could not send your feedback. Try again later.",
+      });
+      console.error("EmailJS Error:", error);
+    });
+});
 
 const scamIcons = [
   `
@@ -289,3 +299,41 @@ if (scamIconContainer) {
   const randomIndex = Math.floor(Math.random() * scamIcons.length);
   scamIconContainer.innerHTML = scamIcons[randomIndex];
 }
+
+//for the footer theme
+
+  const updateFooterTheme = () => {
+    const isDark = document.body.classList.contains("dark");
+    const footer = document.getElementById("siteFooter");
+
+    if (footer) {
+      // Background color
+      footer.style.backgroundColor = isDark ? "#1e1e1e" : "#111";
+
+      // Text colors
+      const allText = footer.querySelectorAll("p");
+      allText.forEach(p => {
+        if (p.innerText.includes("©")) {
+          p.style.color = isDark ? "#888" : "#555";
+        } else {
+          p.style.color = isDark ? "#eee" : "#ccc";
+        }
+      });
+
+      // Social icons (slightly brighten/darken)
+      const icons = footer.querySelectorAll("img");
+      icons.forEach(icon => {
+        icon.style.filter = isDark ? "brightness(1)" : "brightness(0.8)";
+      });
+    }
+  };
+
+  // Watch for theme changes
+  const observer = new MutationObserver(updateFooterTheme);
+  observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+
+  // Also run once on load
+  window.addEventListener("DOMContentLoaded", updateFooterTheme);
+
+
+

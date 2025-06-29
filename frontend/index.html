@@ -9,8 +9,14 @@
       type="text/javascript"
       src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
     ></script>
+    <script type="text/javascript">
+      (function () {
+        emailjs.init({
+          publicKey: "7Wy3jnBNOJLwUEJYR",
+        });
+      })();
+    </script>
 
-    <script type="module" src="app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
@@ -51,7 +57,7 @@
             placeholder="Tell us what you think..."
             required
           />
-          <button id="submitFeedback">Send</button>
+          <button id="submitFeedback" class="btn liquid">Send</button>
         </div>
 
         <div id="feedbackResponse"></div>
@@ -95,6 +101,45 @@
           </svg>
         </button>
       </div>
+      <div class="footer" id="siteFooter">
+        <p>Need help or want to reach out?</p>
+
+        <div style="margin-bottom: 12px">
+          <a href="https://x.com/Davozay_" target="_blank">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/5968/5968958.png"
+              alt="X"
+              width="24"
+            />
+          </a>
+          <a
+            href="https://www.linkedin.com/in/david-a-253a57178/"
+            target="_blank"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/145/145807.png"
+              alt="LinkedIn"
+              width="24"
+            />
+          </a>
+          <a
+            href="https://www.instagram.com/daveozay_23?igsh=YmNibDJ5ZjJtczV3"
+            target="_blank"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
+              alt="Instagram"
+              width="24"
+            />
+          </a>
+        </div>
+
+        <p class="copyright">
+          © 2025 Sentinelle Scam Detector by AmoneAmone. All rights reserved.
+        </p>
+      </div>
     </div>
+
+    <script type="module" src="app.js"></script>
   </body>
 </html>

@@ -16,7 +16,7 @@ VIRUSTOTAL_API_KEY = os.getenv("VIRUSTOTAL_API_KEY")
 COMMON_QUERIES = {
     "how does this work": [
         "Paste a suspicious link or message and I'll check if it's a scam!",
-        "Just drop a message or URL, and I’ll scan it for phishing risks."
+        "Just drop a message or URL, and I'll scan it for phishing risks."
     ],
     "hello": [
         "Hi there! 👋 I'm here to help you detect scams.",
@@ -68,12 +68,13 @@ RESPONSES = [
                     ]
     },
     {
-        "keywords": ["hello", "hi", "how are you", "who are you", "you", "how are"],
+        "keywords": ["hello", "hi", "how are you", "who are you", "you", "how are", "holla"],
         "rating": "safe",
         "replies": ["👋 Hey there! I'm Sentinelle 1.0 your ScamGuard AI — your assistant for spotting scams. Paste any suspicious message or link!",
                     "Hey how may I help You today?",
                     "Hi",
-                    "Hey hey hey! 🙌"
+                    "Hey hey hey! 🙌",
+                    "Hi how are you doing today"
 
                     ],
 
@@ -87,7 +88,20 @@ RESPONSES = [
             "Love is a beautiful thing 💖",
             "Beautiful"
         ]
-    }
+    },
+    {
+        "keywords": ["saved messages", "saved links", "old messages", "old links", "previous messages", "previous links", "old", "previous"],
+        "rating": "unknown",
+        "replies": [
+            "Oh I am so sorry but I cannot provide you with old messages or links because I do not have them saved.  ",
+            "I am so sorry I actually do not have the capability to display  previous links.",
+            "Oh oh I do not have it stored.",
+            "Sorry I wish I had them saved but I don't have a database where your old info was saved.",
+            "Oops! I wish I had them saved, but I don't have a storage system to remember old info.",
+    "Sadly, I don't retain past messages or links. I'm built for real-time help only."
+        ]
+    },
+
 ]
 
 
@@ -97,20 +111,20 @@ neutral_responses = [
     "I can't detect anything specific, but trust your instincts.",
     "Nothing clearly dangerous here — but be alert.",
     "I'm not sure yet, but better safe than sorry!",
-    "🕵️‍♂️ I'm scanning… but this one’s a bit tricky.",
-    "This doesn't raise major flags, but don’t click anything suspicious.",
+    "🕵️‍♂️ I'm scanning… but this one's a bit tricky.",
+    "This doesn't raise major flags, but don't click anything suspicious.",
     "No obvious red flags, but be cautious anyway.",
     "Stay alert, some scams hide in plain sight.",
     "It could be harmless… or it could be bait. 🎣",
     "🚧 Nothing major detected — but use your judgment!",
-    "🧠 This one’s vague — double-check if it came from someone you know.",
+    "🧠 This one's vague — double-check if it came from someone you know.",
     "😶 I don't have enough info to call this a scam.",
     "Looks neutral on the surface — stay curious, stay careful.",
     "Nothing shady here… at least not visibly.",
-    "💭 Feels off? Trust your gut even if I’m not sure.",
+    "💭 Feels off? Trust your gut even if I'm not sure.",
     "This might be a grey area — don't rush into it.",
     "No strong indicators, but you can always double-check with a real human.",
-    "Hmmm… this one’s flying under the radar.",
+    "Hmmm… this one's flying under the radar.",
     "Nothing screams danger, but proceed thoughtfully."
 
 ]
@@ -133,14 +147,14 @@ def check():
     content = data.get("content", "")
     result = {"rating": "unknown", "reasons": []}
 
-    if content.startswith("http"):
+    if content.startswith("http") or content.startswith("what is http"):
         parsed_url = urlparse(content)
         scheme = parsed_url.scheme
         netloc = parsed_url.netloc
         extension = netloc.split('.')[-1] if '.' in netloc else "unknown"
 
         result["reasons"].append(f"Domain extension: .{extension}")
-        if scheme == 'https':
+        if scheme == 'https' or 'what is https':
             result["reasons"].append("✅ Link uses HTTPS (secure connection).")
         else:
             result["rating"] = "scam"  # downgrade if already suspicious
