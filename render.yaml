@@ -2,8 +2,12 @@ services:
   - type: web
     name: scam-detector-backend
     env: python
-    buildCommand: pip install -r backend/requirements.txt
-    startCommand: python backend/app.py
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    rootDir: backend
     envVars:
-      - key: PORT
-        value: 5000
+      - key: VIRUSTOTAL_API_KEY
+        value: 1ce7eb5bbd4ac08a6b3ce73f8ce3abd87b5fddedd30bbe02f5f894f23f0180a3
