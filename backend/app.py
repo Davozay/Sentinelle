@@ -68,7 +68,7 @@ RESPONSES = [
                     ]
     },
     {
-        "keywords": ["hello", "hi", "how are you", "who are you", "you", "how are", "holla"],
+        "keywords": ["hello", "hi", "how are you", "who are you", "you", "how are", "holla", "hea"],
         "rating": "safe",
         "replies": ["👋 Hey there! I'm Sentinelle 1.0 your ScamGuard AI — your assistant for spotting scams. Paste any suspicious message or link!",
                     "Hey how may I help You today?",
