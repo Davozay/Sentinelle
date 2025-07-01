@@ -297,9 +297,8 @@ const scamIcons = [
     <path d="M12 14c0 1.5-1.5 3-3 3s-3-1.5-3-3M21 21l-3-3" />
   </svg>
   `,
-  
 
-    `
+  `
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#ff6b6b" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
     <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
     <line x1="12" y1="9" x2="12" y2="13"/>
@@ -317,6 +316,12 @@ const scamIcons = [
   <svg xmlns="http://www.w3.org/2000/svg" fill="#43aa8b" viewBox="0 0 24 24" stroke="none">
     <path d="M12 2l9 4v6c0 5.25-3.75 10-9 12C6.75 22 3 17.25 3 12V6l9-4z"/>
     <path d="M9.5 11.5l2 2 3.5-3.5" fill="none" stroke="#fff" stroke-width="2"/>
+  </svg>
+  `,
+  `
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="red" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="4" y1="4" x2="20" y2="20"/>
   </svg>
   `,
 ];
