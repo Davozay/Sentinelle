@@ -1,6 +1,8 @@
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+*.zip
 *.exe
 *.dll
 *.so
@@ -9,6 +11,7 @@ __pycache__/
 *.png
 *.gif
 *.mp4
-*.zip
+*.db
 .env
 .venv/
+poetry.lock
