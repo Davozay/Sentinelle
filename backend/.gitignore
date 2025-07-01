@@ -3,10 +3,12 @@ __pycache__/
 *.pyo
 *.exe
 *.dll
+*.so
 *.jpg
 *.jpeg
 *.png
 *.gif
-*.DS_Store
-.venv/
+*.mp4
+*.zip
 .env
+.venv/
