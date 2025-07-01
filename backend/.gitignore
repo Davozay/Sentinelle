@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+*.exe
+*.dll
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.DS_Store
+.venv/
+.env
