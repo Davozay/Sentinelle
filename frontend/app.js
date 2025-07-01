@@ -32,7 +32,7 @@ checkBtn.addEventListener("click", async () => {
   document.body.appendChild(skeletonOverlay);
 
   try {
-    const res = await fetch("http://localhost:5000/check", {
+    const res = await fetch("https://sentinelle-backend.onrender.com", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content }),
@@ -233,7 +233,8 @@ submitFeedback.addEventListener("click", () => {
     return;
   }
 
-  emailjs.send("service_56109gg", "template_a16aqem", {
+  emailjs
+    .send("service_56109gg", "template_a16aqem", {
       name: name,
       email: email,
       message: message || "(no written message)",
@@ -246,13 +247,14 @@ submitFeedback.addEventListener("click", () => {
         text: "Your feedback has been sent successfully.",
       });
 
-
-     // Reset form
-    feedbackText.value = "";
-    if (document.getElementById("feedbackName")) document.getElementById("feedbackName").value = "";
-    if (document.getElementById("feedbackEmail")) document.getElementById("feedbackEmail").value = "";
-    selectedReaction = "";
-    feedbackBox.classList.add("hidden");
+      // Reset form
+      feedbackText.value = "";
+      if (document.getElementById("feedbackName"))
+        document.getElementById("feedbackName").value = "";
+      if (document.getElementById("feedbackEmail"))
+        document.getElementById("feedbackEmail").value = "";
+      selectedReaction = "";
+      feedbackBox.classList.add("hidden");
     })
     .catch((error) => {
       Swal.fire({
@@ -279,6 +281,32 @@ const scamIcons = [
     <line x1="14" y1="15" x2="18" y2="15" />
   </svg>
   `,
+
+  `
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#555" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+    <path d="M7 11V7a5 5 0 0110 0v4"/>
+  </svg>
+  `,
+
+  `
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#000" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 12s2-4 10-4 10 4 10 4" />
+    <circle cx="8" cy="14" r="2" />
+    <circle cx="16" cy="14" r="2" />
+    <path d="M12 14c0 1.5-1.5 3-3 3s-3-1.5-3-3M21 21l-3-3" />
+  </svg>
+  `,
+  
+
+    `
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#ff6b6b" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+    <line x1="12" y1="9" x2="12" y2="13"/>
+    <line x1="12" y1="17" x2="12.01" y2="17"/>
+  </svg>
+  `,
+
   `
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#e63946" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M10 14a4 4 0 000-8h-2a4 4 0 000 8h2zm4-4h2a4 4 0 010 8h-2a4 4 0 010-8z" />
@@ -302,38 +330,38 @@ if (scamIconContainer) {
 
 //for the footer theme
 
-  const updateFooterTheme = () => {
-    const isDark = document.body.classList.contains("dark");
-    const footer = document.getElementById("siteFooter");
+const updateFooterTheme = () => {
+  const isDark = document.body.classList.contains("dark");
+  const footer = document.getElementById("siteFooter");
 
-    if (footer) {
-      // Background color
-      footer.style.backgroundColor = isDark ? "#1e1e1e" : "#111";
+  if (footer) {
+    // Background color
+    footer.style.backgroundColor = isDark ? "#1e1e1e" : "#111";
 
-      // Text colors
-      const allText = footer.querySelectorAll("p");
-      allText.forEach(p => {
-        if (p.innerText.includes("©")) {
-          p.style.color = isDark ? "#888" : "#555";
-        } else {
-          p.style.color = isDark ? "#eee" : "#ccc";
-        }
-      });
+    // Text colors
+    const allText = footer.querySelectorAll("p");
+    allText.forEach((p) => {
+      if (p.innerText.includes("©")) {
+        p.style.color = isDark ? "#888" : "#555";
+      } else {
+        p.style.color = isDark ? "#eee" : "#ccc";
+      }
+    });
 
-      // Social icons (slightly brighten/darken)
-      const icons = footer.querySelectorAll("img");
-      icons.forEach(icon => {
-        icon.style.filter = isDark ? "brightness(1)" : "brightness(0.8)";
-      });
-    }
-  };
+    // Social icons (slightly brighten/darken)
+    const icons = footer.querySelectorAll("img");
+    icons.forEach((icon) => {
+      icon.style.filter = isDark ? "brightness(1)" : "brightness(0.8)";
+    });
+  }
+};
 
-  // Watch for theme changes
-  const observer = new MutationObserver(updateFooterTheme);
-  observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+// Watch for theme changes
+const observer = new MutationObserver(updateFooterTheme);
+observer.observe(document.body, {
+  attributes: true,
+  attributeFilter: ["class"],
+});
 
-  // Also run once on load
-  window.addEventListener("DOMContentLoaded", updateFooterTheme);
-
-
-
+// Also run once on load
+window.addEventListener("DOMContentLoaded", updateFooterTheme);
