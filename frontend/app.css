@@ -10,16 +10,16 @@ body {
   margin: 0;
 }
 
-#mainlogo {
+/* #mainlogo {
   height: 120px;
   display: inline-block;
   position: absolute;
   top: 9px;
   left: 20px;
-  border-radius: 200px;
+  border-radius: 200px; */
 
   /* transform: rotate(45deg); */
-}
+/* } */
 
 
 
@@ -529,14 +529,14 @@ body.dark .swal2-confirm {
 }
 
 
-#mainlogo {
+/* #mainlogo {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 #mainlogo:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
-}
+} */
 
 
 /*footer hover yupp */
@@ -605,14 +605,14 @@ body.dark .footer a:hover img {
 
 
 @media screen and (max-width: 600px) {
-  #mainlogo {
+  /* #mainlogo {
     position: absolute;
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
     height: 80px;
     z-index: 1000;
-  }
+  } */
 
   .container {
     margin-top: 130px;
@@ -640,10 +640,10 @@ body.dark .footer a:hover img {
     padding: 30px;
   }
 
-  #mainlogo {
+  /* #mainlogo {
     height: 100px;
     left: 50%;
     transform: translateX(-50%);
     top: 15px;
-  }
+  } */
 }
