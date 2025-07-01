@@ -1,13 +1,15 @@
 services:
   - type: web
-    name: scam-detector-backend
+    name: sentinelle-backend
     env: python
     plan: free
     region: oregon
     branch: main
-    buildCommand: pip install -r requirements.txt
+    buildCommand: "poetry install"
     startCommand: python app.py
     rootDir: backend
     envVars:
       - key: VIRUSTOTAL_API_KEY
         value: 1ce7eb5bbd4ac08a6b3ce73f8ce3abd87b5fddedd30bbe02f5f894f23f0180a3
+        - key: PORT
+          value: 10000
