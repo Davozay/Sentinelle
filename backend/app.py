@@ -6,8 +6,49 @@ from urllib.parse import urlparse, quote
 import os
 import requests  # ✅ This is the correct library to make HTTP requests
 from random import choice
+import torch
+import torch.nn as nn
+import pickle
+
+
+
+import torch
+import torch.nn as nn
+
+# Load vocab
+with open("pytorch_vocab.pkl", "rb") as f:
+    vocab = pickle.load(f)
+with open("pytorch_inv_vocab.pkl", "rb") as f:
+    inv_vocab = pickle.load(f)
+
+# Tokenizer
+def tokenizer(text):
+    return text.lower().split()
+
+# Model definition
+class RNNPredictor(nn.Module):
+    def __init__(self, vocab_size, embed_size, hidden_size):
+        super(RNNPredictor, self).__init__()
+        self.embed = nn.Embedding(vocab_size, embed_size, padding_idx=0)
+        self.rnn = nn.LSTM(embed_size, hidden_size, batch_first=True)
+        self.fc = nn.Linear(hidden_size, vocab_size)
+
+    def forward(self, x):
+        x = self.embed(x)
+        _, (h, _) = self.rnn(x)
+        return self.fc(h[-1])
+
+# Load model
+model = RNNPredictor(len(vocab), 64, 128)
+model.load_state_dict(torch.load("pytorch_rnn_model.pth"))
+model.eval()
+
+
+
+
 
 load_dotenv()
+
 app = Flask(__name__)
 CORS(app)
 
@@ -74,7 +115,8 @@ RESPONSES = [
                     "Hey how may I help You today?",
                     "Hi",
                     "Hey hey hey! 🙌",
-                    "Hi how are you doing today"
+                    "Hi how are you doing today",
+                    "Hey how may I help you today?"
 
                     ],
 
@@ -98,7 +140,7 @@ RESPONSES = [
             "Oh oh I do not have it stored.",
             "Sorry I wish I had them saved but I don't have a database where your old info was saved.",
             "Oops! I wish I had them saved, but I don't have a storage system to remember old info.",
-    "Sadly, I don't retain past messages or links. I'm built for real-time help only."
+            "Sadly, I don't retain past messages or links. I'm built for real-time help only."
         ]
     },
 
@@ -215,6 +257,7 @@ def check():
     else:
         message = content.lower()
 
+      
        # Run both matching in order of priority
         response = get_custom_response(content)
         if response:
@@ -233,6 +276,22 @@ def check():
 
     return jsonify(result)
 
+@app.route("/predict-next", methods=["POST"])
+def predict_next():
+    data = request.get_json()
+    input_text = data.get("text", "")
+    tokens = tokenizer(input_text)
+    input_ids = [vocab.get(w, 0) for w in tokens]
+    input_padded = [0] * (5 - len(input_ids)) + input_ids
+    input_tensor = torch.tensor([input_padded])
+
+    with torch.no_grad():
+        output = model(input_tensor)
+        topk = torch.topk(output, 3)  # Get top 3 predicted indices
+        indices = topk.indices[0].tolist()
+        suggestions = [inv_vocab.get(i, "...") for i in indices]
+    
+    return jsonify({"suggestions": suggestions})
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)

@@ -32,7 +32,7 @@ checkBtn.addEventListener("click", async () => {
   document.body.appendChild(skeletonOverlay);
 
   try {
-    const res = await fetch("https://sentinelle-backend.onrender.com", {
+    const res = await fetch("http://localhost:5000/check", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content }),
@@ -353,7 +353,7 @@ const updateFooterTheme = () => {
       }
     });
 
-    // Social icons (slightly brighten/darken)
+    // Social icons (slightly brighten/darken...)
     const icons = footer.querySelectorAll("img");
     icons.forEach((icon) => {
       icon.style.filter = isDark ? "brightness(1)" : "brightness(0.8)";
@@ -361,12 +361,72 @@ const updateFooterTheme = () => {
   }
 };
 
-// Watch for theme changes
+// lerrus Watch for theme changes
 const observer = new MutationObserver(updateFooterTheme);
 observer.observe(document.body, {
   attributes: true,
   attributeFilter: ["class"],
 });
 
-// Also run once on load
+// Also runssssss once on load
 window.addEventListener("DOMContentLoaded", updateFooterTheme);
+
+
+
+
+
+
+const suggestionBox = document.createElement("div");
+suggestionBox.id = "suggestionBox";
+document.body.appendChild(suggestionBox);
+
+userInput.addEventListener("input", async () => {
+  const text = userInput.value.trim();
+  if (!text) {
+    suggestionBox.innerHTML = "";
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:5000/predict-next", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
+    });
+    const data = await res.json();
+    if (Array.isArray(data.suggestions)) {
+      showSuggestions(data.suggestions);
+    } else {
+      suggestionBox.innerHTML = ""; 
+    }
+  } catch (error) {
+    console.error("Prediction error:", error);
+  }
+});
+
+function showSuggestions(suggestions) {
+  suggestionBox.innerHTML = "";
+  suggestions.forEach((word) => {
+    const el = document.createElement("div");
+    el.textContent = word;
+    el.className = "suggestion-item"; // style with CSS
+    el.addEventListener("click", () => {
+      userInput.value += " " + word;
+      suggestionBox.innerHTML = "";
+    });
+    suggestionBox.appendChild(el);
+  });
+}
+
+
+
+
+
+userInput.addEventListener("keydown", (e) => {
+  if (e.key === "Tab" && suggestionBox.textContent.includes("Next word")) {
+    e.preventDefault();
+    const suggestion = suggestionBox.textContent.replace("Next word suggestion: ", "");
+    userInput.value += " " + suggestion;
+    suggestionBox.textContent = "";
+  }
+});

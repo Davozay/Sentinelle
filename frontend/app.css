@@ -18,7 +18,7 @@ body {
   left: 20px;
   border-radius: 200px; */
 
-  /* transform: rotate(45deg); */
+/* transform: rotate(45deg); */
 /* } */
 
 
@@ -164,7 +164,7 @@ button {
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  background-color: #667eea;
+  /* background-color: #667eea; */
   color: #fff;
   transition: background-color 0.3s ease;
 }
@@ -528,6 +528,31 @@ body.dark .swal2-confirm {
   display: none;
 }
 
+/*auto suggesteyyyy*/
+#suggestionBox {
+  position: absolute;
+  top: 176px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--background, #fff)transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  max-width: 400px;
+  width: 80%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.suggestion-item {
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.suggestion-item:hover {
+  background: none;
+}
 
 /* #mainlogo {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -582,8 +607,8 @@ body.dark .footer img {
 }
 
 
-.footer a{
-  margin: 0 10px; 
+.footer a {
+  margin: 0 10px;
   text-decoration: none
 }
 
@@ -613,6 +638,14 @@ body.dark .footer a:hover img {
     height: 80px;
     z-index: 1000;
   } */
+
+
+
+  #suggestionBox {
+    /* position: absolute; */
+    top:300px;
+    left: 42%;
+  }
 
   .container {
     margin-top: 130px;
