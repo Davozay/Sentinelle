@@ -11,7 +11,6 @@ import torch.nn as nn
 import pickle
 
 
-
 import torch
 import torch.nn as nn
 
@@ -22,10 +21,14 @@ with open("pytorch_inv_vocab.pkl", "rb") as f:
     inv_vocab = pickle.load(f)
 
 # Tokenizer
+
+
 def tokenizer(text):
     return text.lower().split()
 
 # Model definition
+
+
 class RNNPredictor(nn.Module):
     def __init__(self, vocab_size, embed_size, hidden_size):
         super(RNNPredictor, self).__init__()
@@ -38,13 +41,11 @@ class RNNPredictor(nn.Module):
         _, (h, _) = self.rnn(x)
         return self.fc(h[-1])
 
+
 # Load model
 model = RNNPredictor(len(vocab), 64, 128)
 model.load_state_dict(torch.load("pytorch_rnn_model.pth"))
 model.eval()
-
-
-
 
 
 load_dotenv()
@@ -67,7 +68,7 @@ COMMON_QUERIES = {
         "Need help? Just paste a message or link you'd like me to check.",
         "I scan texts or URLs for known scam patterns. Try it out!"
     ],
-    "who made you": [
+    "who made you?": [
         "I was built in 2025 by a passionate developer to fight scams online!",
         "Created with ❤️ in 2025 to protect people from online fraud."
     ],
@@ -80,6 +81,14 @@ COMMON_QUERIES = {
 
 
 RESPONSES = [
+    {
+        "keywords": ["urgent "],
+        "rating": "safe",
+        "replies": ["Oh you need help? with something urgent...well I am here to help with that be it susspected urls, or messages, just send it.",
+                    "Okay How can I be of help?"
+                    ]
+
+    },
     {
         "keywords": ["win", "prize", "congratulations", "claim now"],
         "rating": "scam",
@@ -109,14 +118,16 @@ RESPONSES = [
                     ]
     },
     {
-        "keywords": ["hello", "hi", "how are you", "who are you", "you", "how are", "holla", "hea"],
+        "keywords": ["hello", "hi", "hey", "how are you", "who are you", "how are", "holla", "hea"],
         "rating": "safe",
         "replies": ["👋 Hey there! I'm Sentinelle 1.0 your ScamGuard AI — your assistant for spotting scams. Paste any suspicious message or link!",
                     "Hey how may I help You today?",
                     "Hi",
                     "Hey hey hey! 🙌",
                     "Hi how are you doing today",
-                    "Hey how may I help you today?"
+                    "Hey how may I help you today?",
+
+
 
                     ],
 
@@ -143,6 +154,34 @@ RESPONSES = [
             "Sadly, I don't retain past messages or links. I'm built for real-time help only."
         ]
     },
+    {
+        "keywords": [
+            "where are you from?",
+            "where did you come about?",
+            "who built you",
+            "who made you",
+            "what's your origin",
+            "where were you developed",
+            "your developer",
+            "who created you",
+            "who is behind you",
+            "who's your maker"
+        ],
+        "rating": "safe",
+        "replies": [
+            "I was built in 2025 by a passionate developer to fight scams online!",
+            "Created by a developer called Daveozay in 2025 to protect people from online fraud.",
+            "Proudly crafted in 2025 — Sentinelle here to guard your inbox and links.",
+            "Built and a bit of coffee in 2025 by Daveozay a software developer, and to know more baout him kindly visit his github or socials via the footer below.",
+            "Birthed from lines of code and purpose — 2025, baby!",
+            "Made by someone who's had enough of online scams. Go Daveozay!",
+            "I'm a 2025 creation from a dev who wanted to make the internet a safer place.",
+            "One word: Daveozay. That's who made me — and I'm proud of it.",
+            "Engineered with care and purpose to help YOU stay safe online.",
+            "Straight outta 2025 — by a dev who hates scams as much as you do. 💥"
+        ]
+    }
+
 
 ]
 
@@ -210,40 +249,62 @@ def check():
                 "Shortened link detected, common in phishing. ❌")
 
         #  Check using VirusTotal really workkss haha
-        vt_worked = False
+    
         try:
+            headers = {
+                "x-apikey": VIRUSTOTAL_API_KEY,
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+
+            # Step 1: Submit URL to get analysis ID
+            submit_res = requests.post(
+                "https://www.virustotal.com/api/v3/urls",
+                headers=headers,
+                data=f"url={content}"
+            )
+
+            if submit_res.status_code == 200:
+                encoded_id = submit_res.json().get("data", {}).get("id")
+
+                # 1. Analyze the URL (submit for scanning)
             headers = {"x-apikey": VIRUSTOTAL_API_KEY}
-            url_id = quote(content, safe='')
-            vt_url = f"https://www.virustotal.com/api/v3/urls/{url_id}"
-            # ✅ use `requests.get`
-            response = requests.get(vt_url, headers=headers)
+            submit_url = "https://www.virustotal.com/api/v3/urls"
+            submit_res = requests.post(submit_url, headers=headers, data=f"url={content}")
+            if submit_res.status_code == 200:
+                analysis_id = submit_res.json().get("data", {}).get("id", "")
+                vt_url = f"https://www.virustotal.com/api/v3/analyses/{analysis_id}"
 
-            if response.status_code == 200:
-                vt_data = response.json()
-                stats = vt_data.get("data", {}).get(
-                    "attributes", {}).get("last_analysis_stats", {})
-                positives = stats.get("malicious", 0)
+                import time
+                for attempt in range(5):
+                    report_res = requests.get(vt_url, headers=headers)
+                    if report_res.status_code == 200:
+                        vt_data = report_res.json()
+                        stats = vt_data.get("data", {}).get("attributes", {}).get("stats", {})
+                        positives = stats.get("malicious", 0)
 
-                if positives > 0:
-                    result["rating"] = "scam"
-                    result["reasons"].append(
-                        f"⚠️ Detected by {positives} engine(s) on VirusTotal.")
+                        if positives > 0:
+                            result["rating"] = "scam"
+                            result["reasons"].append(f"⚠️ Detected by {positives} engine(s) on VirusTotal.")
+                        else:
+                            if result["rating"] != "scam":
+                                result["rating"] = "safe"
+                            result["reasons"].append("✅ VirusTotal reports this URL as clean.")
+                        break
+                    else:
+                        time.sleep(1)
                 else:
-                    if result["rating"] != "scam":
-                        result["rating"] = "safe"
-                    result["reasons"].append(
-                        "✅ VirusTotal reports this URL as clean.")
+                    result["reasons"].append("❌ VirusTotal report fetch failed after multiple attempts.")
             else:
-                result["reasons"].append(
-                    "❌ VirusTotal API error or quota limit.")
+                result["reasons"].append("❌ Failed to submit URL to VirusTotal.")
+
 
         except Exception as e:
             result["reasons"].append(f"⚠️ VirusTotal check skipped: {str(e)}")
 
-        if not vt_worked:
-            try:
-                res = requests.post(
-                    "https://urlhaus-api.abuse.ch/v1/host/", data={"host": netloc})
+        try:
+            res = requests.post(
+                "https://urlhaus-api.abuse.ch/v1/host/", data={"host": netloc})
+            if res.status_code == 200 and res.text.strip().startswith("{"):
                 data = res.json()
                 if data.get("query_status") == "ok":
                     result["rating"] = "scam"
@@ -251,13 +312,16 @@ def check():
                         "⚠️ Listed on URLhaus as malicious.")
                 else:
                     result["reasons"].append("✅ Not listed on URLhaus.")
-            except Exception as e:
-                result["reasons"].append(f"❌ URLhaus check failed: {str(e)}")
+
+            else:
+                result["reasons"].append(
+                    "❌ URLhaus gave an invalid or empty response.")
+        except Exception as e:
+            result["reasons"].append(f"❌ URLhaus check failed: {str(e)}")
 
     else:
         message = content.lower()
 
-      
        # Run both matching in order of priority
         response = get_custom_response(content)
         if response:
@@ -276,6 +340,7 @@ def check():
 
     return jsonify(result)
 
+
 @app.route("/predict-next", methods=["POST"])
 def predict_next():
     data = request.get_json()
@@ -290,8 +355,9 @@ def predict_next():
         topk = torch.topk(output, 3)  # Get top 3 predicted indices
         indices = topk.indices[0].tolist()
         suggestions = [inv_vocab.get(i, "...") for i in indices]
-    
+
     return jsonify({"suggestions": suggestions})
+
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
